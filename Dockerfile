@@ -14,6 +14,6 @@ COPY . .
 
 WORKDIR /Lino-Webcrawler-Matricula/crawler
 
-EXPOSE 5004
+EXPOSE 5000
 
-CMD sleep infinity
+CMD python server.py
