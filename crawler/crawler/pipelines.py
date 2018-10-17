@@ -14,7 +14,7 @@ class CrawlerPipeline(object):
         self.file = open('result.json', 'w')
 
     def close_spider(self, spider):
-        self.file.write(json.dumps(self.list, indent=4))
+        self.file.write(json.dumps(self.list, indent=4, ensure_ascii=False))
         self.file.close()
 
     def process_item(self, item, spider):
