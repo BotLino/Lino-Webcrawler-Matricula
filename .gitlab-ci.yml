@@ -1,0 +1,40 @@
+stages:
+  - test
+  - build
+  - deploy
+
+variables:
+  WEBCRAWLER_LATEST_IMAGE: $DOCKER_USER/webcrawler-matricula:latest
+
+test_flake8:
+  image: ejplatform/python:alpine
+  stage: test
+  script:
+    - flake8
+
+build webcrawler:
+  image: docker:latest
+  stage: build
+  services:
+    - docker:dind
+  script:
+    - docker build -t $WEBCRAWLER_LATEST_IMAGE .
+    - docker login -u $DOCKER_USER -p $DOCKER_PASS
+    - docker push $WEBCRAWLER_LATEST_IMAGE
+  only:
+    - /master/
+  environment: production
+
+deploy_production:
+  image: cdrx/rancher-gitlab-deploy
+  stage: deploy
+  script:
+    - "upgrade
+            --service webcrawler-matricula
+            --environment $RANCHER_ENVIRONMENT
+            --stack $RANCHER_STACK
+            --rancher-key $RANCHER_ACCESS_KEY
+            --rancher-secret $RANCHER_SECRET_KEY
+            --rancher-url $RANCHER_URL"
+  only:
+    - /master/
