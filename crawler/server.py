@@ -10,13 +10,13 @@ app.config['JSON_AS_ASCII'] = False
 @app.route('/')
 def hello():
     return """
-        <h1>WebCrawler - Matricula</h1>
+        <h1>WebCrawler - Registration</h1>
     """
-@app.route('/matricula/downloadPdf')
+@app.route('/registration/downloadPdf')
 def downloadPdf():
     subprocess.check_output(['python','scraper.py'])
     return """
-        <h1>Pdf baixado</h1>
+        <h1>Pdf downloaded</h1>
     """
 
 
