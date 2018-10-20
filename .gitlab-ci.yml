@@ -23,7 +23,6 @@ build webcrawler:
     - docker push $WEBCRAWLER_LATEST_IMAGE
   only:
     - /master/
-    - /ContinuousDeploy/
   environment: production
 
 deploy_production:
@@ -39,4 +38,3 @@ deploy_production:
             --rancher-url $RANCHER_URL"
   only:
     - /master/
-    - /ContinuousDeploy/
