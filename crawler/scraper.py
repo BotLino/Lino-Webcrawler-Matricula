@@ -1,12 +1,24 @@
 import pdfx
 import json
 import os
+import time
+import datetime
+from tabula import convert_into
 from scrapy.crawler import CrawlerProcess
 from scrapy.utils.project import get_project_settings
 
-period = "2\u00ba/2018"
-bug = "%09"
+#gets current date and split year and month to get current period
+ts = time.time()
+st = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m')
+st = st.split('-')
+year = st[0]
+month = int(st[1])
+if month >= 1 and month <=6:
+    semester = 1
+else:
+    semester = 2
 
+period = str(semester) + '\u00ba/' + str(year)
 DOWNLOAD_PATH = './downloads/'
 OUTPUT_PATH = './outputs/'
 
@@ -40,6 +52,11 @@ class PdfReader():
             if period in item['text']:
                 pdf = pdfx.PDFx(url)
                 pdf.download_pdfs(DOWNLOAD_PATH)
+                fileName = 'cal_2018_2'
+                convert_into(
+                    f'{DOWNLOAD_PATH}{fileName}.pdf',
+                    f'{OUTPUT_PATH}{fileName}.tsv',
+                    output_format='tsv')
 
 crawl = TheCrawler()
 crawl.runCrawler()
