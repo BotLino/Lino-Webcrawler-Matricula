@@ -6,11 +6,38 @@ stages:
 variables:
   WEBCRAWLER_LATEST_IMAGE: $DOCKER_USER/webcrawler-matricula:latest
 
-test_flake8:
+
+##############################################################################
+#                                 Test stage                                 #
+##############################################################################
+
+test flake8:
   image: ejplatform/python:alpine
   stage: test
   script:
     - flake8
+
+services:
+  - mongo:latest
+
+unit test:
+  image: python:3.6
+  stage: test
+  variables:
+    DB_URI: 'mongodb://mongo/ru'
+  before_script:
+    - pip install -r requirements.txt
+    - apt-get update
+    - apt-get upgrade -y
+    - apt-get install default-jdk -y
+    - cd crawler
+  script:
+    - pytest
+
+
+##############################################################################
+#                                 Build stage                                #
+##############################################################################
 
 build webcrawler:
   image: docker:latest
@@ -24,6 +51,11 @@ build webcrawler:
   only:
     - /master/
   environment: production
+
+
+##############################################################################
+#                                 Deploy stage                               #
+##############################################################################
 
 deploy_production:
   image: cdrx/rancher-gitlab-deploy
