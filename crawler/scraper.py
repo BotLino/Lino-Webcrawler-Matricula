@@ -3,10 +3,12 @@ import json
 import os
 import time
 import datetime
-from tabula import convert_into
 from scrapy.crawler import CrawlerProcess
 from scrapy.utils.project import get_project_settings
 from pdf2image import convert_from_path
+import base64
+import json
+
 
 DOWNLOAD_PATH = './downloads/'
 OUTPUT_PATH = './outputs/'
@@ -57,14 +59,23 @@ class PdfReader():
                 url = item['url']
             
             if period in item['text']:
+                #downloads pdf
                 pdf = pdfx.PDFx(url)
                 pdf.download_pdfs(DOWNLOAD_PATH)
                 fileName = url.split('/')
                 fileName = fileName.pop()
                 fileName = fileName.replace('.pdf','')
+                
+                #converts pdf to image
                 pdf = convert_from_path(f'{DOWNLOAD_PATH}{fileName}.pdf', 300)
                 for page in pdf:
                     page.save(f'{OUTPUT_PATH}{fileName}.png', 'PNG')
+
+                #converts image to base64
+                with open(f'{OUTPUT_PATH}{fileName}.png', "rb") as imageFile:
+                    binaryImageFile = open('imagem.json', 'w')
+                    binaryImageBlob = {'photo':f'{base64.b64encode(imageFile.read())}'}
+                    binaryImageFile.write(json.dumps(binaryImageBlob,indent=4))
 
 if __name__ == '__main__':
     crawl = TheCrawler()
