@@ -1,5 +1,4 @@
 import pdfx
-import json
 import os
 import time
 import datetime
@@ -12,6 +11,7 @@ import json
 DOWNLOAD_PATH = './downloads/'
 OUTPUT_PATH = './outputs/'
 
+
 class TheCrawler():
     def __init__(self):
         self.process = CrawlerProcess(get_project_settings())
@@ -19,6 +19,7 @@ class TheCrawler():
     def runCrawler(self):
         self.process.crawl('registration')
         self.process.start()
+
 
 class JsonReader():
     def __init__(self):
@@ -29,41 +30,42 @@ class JsonReader():
 class PdfReader():
     def __init__(self):
         self.data = JsonReader()
-        
+
     def getCurrentPeriod(self):
-        #gets current date and split year and month to get current period
+        # gets current date and split year and month to get current period
         ts = time.time()
         st = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m')
         st = st.split('-')
         year = st[0]
         month = int(st[1])
-        if month >= 1 and month <=6:
+        if month >= 1 and month <= 6:
             semester = 1
         else:
             semester = 2
-        
+
         period = str(semester) + '\u00ba/' + str(year)
         return period
 
-    def convertsPdfToImage(self,fileName):
-        pdf = convert_from_path(f'{DOWNLOAD_PATH}{fileName}.pdf', 300)
+    def convertsPdfToImage(self, fileName):
+        pdf = convert_from_path(f'{DOWNLOAD_PATH}{fileName}.pdf',  300)
         for page in pdf:
             page.save(f'{OUTPUT_PATH}{fileName}.png', 'PNG')
 
-    def convertsImageToBase64(self,fileName):
+    def convertsImageToBase64(self, fileName):
         with open(f'{OUTPUT_PATH}{fileName}.png', "rb") as imageFile:
             binaryImageFile = open('binaryImageFile.json', 'w')
-            binaryImageBlob = {'photo':f'{base64.b64encode(imageFile.read())}'}
-            binaryImageFile.write(json.dumps(binaryImageBlob,indent=4))
-    
+            binaryImageBlob = {
+                'photo': f'{base64.b64encode(imageFile.read())}'}
+            binaryImageFile.write(json.dumps(binaryImageBlob, indent=4))
+
     def fixURL(url):
         if "%09" in url:
-            url = url.replace("%09","")
-        
+            url = url.replace("%09", "")
+
         return url
 
     def downloadRegistration(self):
-        #Downloads pdf from 'result.json'
+        # Downloads pdf from 'result.json'
         period = self.getCurrentPeriod()
         data = self.data
         if not os.path.exists(OUTPUT_PATH):
@@ -71,16 +73,17 @@ class PdfReader():
 
         for item in data.body:
             if period in item['text']:
-                #fix url bug '%09'
+                # fix url bug '%09'
                 url = PdfReader.fixURL(item['url'])
                 pdf = pdfx.PDFx(url)
                 pdf.download_pdfs(DOWNLOAD_PATH)
-                #sets filename
+                # sets filename
                 fileName = url.split('/')
                 fileName = fileName.pop()
-                fileName = fileName.replace('.pdf','')
+                fileName = fileName.replace('.pdf', '')
 
                 return fileName
+
 
 if __name__ == '__main__':
     crawl = TheCrawler()
