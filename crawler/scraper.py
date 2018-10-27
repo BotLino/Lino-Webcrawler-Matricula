@@ -25,10 +25,11 @@ class JsonReader():
         with open('result.json') as f:
             self.body = json.load(f)
 
+
 class PdfReader():
     def __init__(self):
         self.data = JsonReader()
-
+        
     def getCurrentPeriod(self):
         #gets current date and split year and month to get current period
         ts = time.time()
@@ -88,4 +89,3 @@ if __name__ == '__main__':
     pdfFileName = pdf.downloadRegistration()
     pdf.convertsPdfToImage(pdfFileName)
     pdf.convertsImageToBase64(pdfFileName)
-

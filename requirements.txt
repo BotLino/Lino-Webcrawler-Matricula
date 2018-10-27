@@ -4,3 +4,8 @@ Flask
 pdf2image
 tabula-py
 pybase64
+coverage
+pymongo
+freezegun
+mongomock
+pytest
