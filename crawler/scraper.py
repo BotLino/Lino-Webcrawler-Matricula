@@ -9,7 +9,6 @@ from pdf2image import convert_from_path
 import base64
 import json
 
-
 DOWNLOAD_PATH = './downloads/'
 OUTPUT_PATH = './outputs/'
 
@@ -45,6 +44,23 @@ class PdfReader():
         period = str(semester) + '\u00ba/' + str(year)
         return period
 
+    def convertsPdfToImage(self,fileName):
+        pdf = convert_from_path(f'{DOWNLOAD_PATH}{fileName}.pdf', 300)
+        for page in pdf:
+            page.save(f'{OUTPUT_PATH}{fileName}.png', 'PNG')
+
+    def convertsImageToBase64(self,fileName):
+        with open(f'{OUTPUT_PATH}{fileName}.png', "rb") as imageFile:
+            binaryImageFile = open('binaryImageFile.json', 'w')
+            binaryImageBlob = {'photo':f'{base64.b64encode(imageFile.read())}'}
+            binaryImageFile.write(json.dumps(binaryImageBlob,indent=4))
+    
+    def fixURL(url):
+        if "%09" in url:
+            url = url.replace("%09","")
+        
+        return url
+
     def downloadRegistration(self):
         #Downloads pdf from 'result.json'
         period = self.getCurrentPeriod()
@@ -53,33 +69,23 @@ class PdfReader():
             os.mkdir(OUTPUT_PATH)
 
         for item in data.body:
-            if "%09" in item['url']:
-                url = item['url'].replace("%09","")
-            else:
-                url = item['url']
-            
             if period in item['text']:
-                #downloads pdf
+                #fix url bug '%09'
+                url = PdfReader.fixURL(item['url'])
                 pdf = pdfx.PDFx(url)
                 pdf.download_pdfs(DOWNLOAD_PATH)
+                #sets filename
                 fileName = url.split('/')
                 fileName = fileName.pop()
                 fileName = fileName.replace('.pdf','')
-                
-                #converts pdf to image
-                pdf = convert_from_path(f'{DOWNLOAD_PATH}{fileName}.pdf', 300)
-                for page in pdf:
-                    page.save(f'{OUTPUT_PATH}{fileName}.png', 'PNG')
 
-                #converts image to base64
-                with open(f'{OUTPUT_PATH}{fileName}.png', "rb") as imageFile:
-                    binaryImageFile = open('imagem.json', 'w')
-                    binaryImageBlob = {'photo':f'{base64.b64encode(imageFile.read())}'}
-                    binaryImageFile.write(json.dumps(binaryImageBlob,indent=4))
+                return fileName
 
 if __name__ == '__main__':
     crawl = TheCrawler()
     crawl.runCrawler()
     pdf = PdfReader()
-    pdf.downloadRegistration()
+    pdfFileName = pdf.downloadRegistration()
+    pdf.convertsPdfToImage(pdfFileName)
+    pdf.convertsImageToBase64(pdfFileName)
 

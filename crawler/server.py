@@ -15,7 +15,7 @@ def hello():
 @app.route('/registration/downloadPdf')
 def downloadPdf():
     subprocess.check_output(['python','scraper.py'])
-    binaryImageFile = open('imagem.json','r')
+    binaryImageFile = open('binaryImageFile.json','r')
     binaryImageBlob = json.load(binaryImageFile)
     return jsonify(binaryImageBlob)
 
