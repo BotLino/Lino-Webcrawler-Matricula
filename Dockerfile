@@ -4,13 +4,13 @@ RUN apt-get update && \
     apt-get upgrade -y && \
     apt-get install default-jdk -y
 
+RUN apt-get update && apt-get -y install poppler-utils
+
+ADD . /Lino-Webcrawler-Matricula
+
 WORKDIR /Lino-Webcrawler-Matricula
 
-COPY ./requirements.txt .
-
 RUN pip install -r requirements.txt
-
-COPY . .
 
 WORKDIR /Lino-Webcrawler-Matricula/crawler
 

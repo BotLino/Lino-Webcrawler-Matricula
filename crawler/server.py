@@ -1,5 +1,6 @@
 import subprocess
-from flask import Flask
+from flask import Flask, jsonify
+import json
 
 app = Flask(__name__)
 app.config['JSON_AS_ASCII'] = False
@@ -15,9 +16,9 @@ def hello():
 @app.route('/registration/downloadPdf')
 def downloadPdf():
     subprocess.check_output(['python', 'scraper.py'])
-    return """
-        <h1>Pdf downloaded</h1>
-    """
+    binaryImageFile = open('binaryImageFile.json', 'r')
+    binaryImageBlob = json.load(binaryImageFile)
+    return jsonify(binaryImageBlob)
 
 
 if __name__ == '__main__':
