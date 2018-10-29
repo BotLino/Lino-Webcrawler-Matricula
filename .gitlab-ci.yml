@@ -1,0 +1,72 @@
+stages:
+  - test
+  - build
+  - deploy
+
+variables:
+  WEBCRAWLER_LATEST_IMAGE: $DOCKER_USER/webcrawler-matricula:latest
+
+
+##############################################################################
+#                                 Test stage                                 #
+##############################################################################
+
+test flake8:
+  image: ejplatform/python:alpine
+  stage: test
+  script:
+    - flake8
+
+services:
+  - mongo:latest
+
+unit test:
+  image: python:3.6
+  stage: test
+  variables:
+    DB_URI: 'mongodb://mongo/ru'
+  before_script:
+    - pip install -r requirements.txt
+    - apt-get update
+    - apt-get upgrade -y
+    - apt-get install default-jdk -y
+    - cd crawler
+  script:
+    - pytest
+
+
+##############################################################################
+#                                 Build stage                                #
+##############################################################################
+
+build webcrawler:
+  image: docker:latest
+  stage: build
+  services:
+    - docker:dind
+  script:
+    - docker build -t $WEBCRAWLER_LATEST_IMAGE .
+    - docker login -u $DOCKER_USER -p $DOCKER_PASS
+    - docker push $WEBCRAWLER_LATEST_IMAGE
+  only:
+    - /master/
+  environment: production
+
+
+##############################################################################
+#                                 Deploy stage                               #
+##############################################################################
+
+deploy_production:
+  image: cdrx/rancher-gitlab-deploy
+  stage: deploy
+  script:
+    - "upgrade
+            --service webcrawler-matricula
+            --environment $RANCHER_ENVIRONMENT
+            --stack $RANCHER_STACK
+            --rancher-key $RANCHER_ACCESS_KEY
+            --rancher-secret $RANCHER_SECRET_KEY
+            --rancher-url $RANCHER_URL"
+  only:
+    - /master/
