@@ -1,5 +1,6 @@
 import pdfx
 import os
+import os.path
 import time
 import datetime
 from scrapy.crawler import CrawlerProcess
@@ -47,9 +48,10 @@ class PdfReader():
         return period
 
     def convertsPdfToImage(self, fileName):
-        pdf = convert_from_path(f'{DOWNLOAD_PATH}{fileName}.pdf',  300)
-        for page in pdf:
-            page.save(f'{OUTPUT_PATH}{fileName}.png', 'PNG')
+        if not(os.path.isfile(f'{OUTPUT_PATH}{pdfFileName}.png')):
+            pdf = convert_from_path(f'{DOWNLOAD_PATH}{fileName}.pdf',  300)
+            for page in pdf:
+                page.save(f'{OUTPUT_PATH}{fileName}.png', 'PNG')
 
     def convertsImageToBase64(self, fileName):
         with open(f'{OUTPUT_PATH}{fileName}.png', "rb") as imageFile:
@@ -75,12 +77,14 @@ class PdfReader():
             if period in item['text']:
                 # fix url bug '%09'
                 url = PdfReader.fixURL(item['url'])
-                pdf = pdfx.PDFx(url)
-                pdf.download_pdfs(DOWNLOAD_PATH)
                 # sets filename
                 fileName = url.split('/')
                 fileName = fileName.pop()
                 fileName = fileName.replace('.pdf', '')
+                # download pdf
+                if not(os.path.isfile(f'{DOWNLOAD_PATH}{fileName}.pdf')):
+                    pdf = pdfx.PDFx(url)
+                    pdf.download_pdfs(DOWNLOAD_PATH)
 
                 return fileName
 

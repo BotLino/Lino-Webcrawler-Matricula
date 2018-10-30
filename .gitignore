@@ -5,3 +5,4 @@ result.json
 crawler/downloads/
 .env/
 crawler/outputs/
+crawler/binaryImageFile.json
