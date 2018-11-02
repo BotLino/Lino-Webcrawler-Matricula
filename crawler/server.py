@@ -19,7 +19,6 @@ def downloadPdf():
     pdf = PdfReader()
     fileName = pdf.downloadRegistration()
     fileName = f'outputs/{fileName}.png'
-
     return send_file(fileName)
 
 
