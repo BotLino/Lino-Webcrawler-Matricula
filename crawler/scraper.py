@@ -6,7 +6,6 @@ import datetime
 from scrapy.crawler import CrawlerProcess
 from scrapy.utils.project import get_project_settings
 from pdf2image import convert_from_path
-import base64
 import json
 
 DOWNLOAD_PATH = './downloads/'
@@ -53,13 +52,6 @@ class PdfReader():
             for page in pdf:
                 page.save(f'{OUTPUT_PATH}{fileName}.png', 'PNG')
 
-    def convertsImageToBase64(self, fileName):
-        with open(f'{OUTPUT_PATH}{fileName}.png', "rb") as imageFile:
-            binaryImageFile = open('binaryImageFile.json', 'w')
-            binaryImageBlob = {
-                'photo': f'{base64.b64encode(imageFile.read())}'}
-            binaryImageFile.write(json.dumps(binaryImageBlob, indent=4))
-
     def fixURL(url):
         if "%09" in url:
             url = url.replace("%09", "")
@@ -95,4 +87,3 @@ if __name__ == '__main__':
     pdf = PdfReader()
     pdfFileName = pdf.downloadRegistration()
     pdf.convertsPdfToImage(pdfFileName)
-    pdf.convertsImageToBase64(pdfFileName)
