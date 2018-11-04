@@ -1,6 +1,6 @@
 import subprocess
-from flask import Flask, jsonify
-import json
+from flask import Flask, send_file
+from scraper import PdfReader
 
 app = Flask(__name__)
 app.config['JSON_AS_ASCII'] = False
@@ -16,9 +16,10 @@ def hello():
 @app.route('/registration/downloadPdf')
 def downloadPdf():
     subprocess.check_output(['python', 'scraper.py'])
-    binaryImageFile = open('binaryImageFile.json', 'r')
-    binaryImageBlob = json.load(binaryImageFile)
-    return jsonify(binaryImageBlob)
+    pdf = PdfReader()
+    fileName = pdf.downloadRegistration()
+    fileName = f'outputs/{fileName}.png'
+    return send_file(fileName)
 
 
 if __name__ == '__main__':
