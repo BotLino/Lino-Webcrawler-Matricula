@@ -18,8 +18,14 @@ def downloadPdf():
     subprocess.check_output(['python', 'scraper.py'])
     pdf = PdfReader()
     fileName = pdf.downloadRegistration()
-    fileName = f'outputs/{fileName}.png'
-    return send_file(fileName)
+    imageName = f'{OUTPUT_PATH}{fileName}.png'
+    if(os.path.isfile(imageName)):
+        return send_file(imageName)
+    else:
+        return jsonify({
+            'status': 'error',
+            'description': 'pdf not found'
+        }), 404
 
 
 if __name__ == '__main__':
