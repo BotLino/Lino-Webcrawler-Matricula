@@ -1,9 +1,12 @@
 import subprocess
-from flask import Flask, send_file
+import os
+from flask import Flask, send_file, jsonify
 from scraper import PdfReader
 
 app = Flask(__name__)
 app.config['JSON_AS_ASCII'] = False
+
+OUTPUT_PATH = './outputs/'
 
 
 @app.route('/')
@@ -18,8 +21,14 @@ def downloadPdf():
     subprocess.check_output(['python', 'scraper.py'])
     pdf = PdfReader()
     fileName = pdf.downloadRegistration()
-    fileName = f'outputs/{fileName}.png'
-    return send_file(fileName)
+    imageName = f'{OUTPUT_PATH}{fileName}.png'
+    if(os.path.isfile(imageName)):
+        return send_file(imageName)
+    else:
+        return jsonify({
+            'status': 'error',
+            'description': 'pdf not found'
+        }), 404
 
 
 if __name__ == '__main__':
