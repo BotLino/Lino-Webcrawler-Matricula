@@ -1,10 +1,12 @@
 import subprocess
-from flask import Flask, send_file
+import os
+from flask import Flask, send_file, jsonify
 from scraper import PdfReader
 
 app = Flask(__name__)
 app.config['JSON_AS_ASCII'] = False
 
+OUTPUT_PATH = './outputs/'
 
 @app.route('/')
 def hello():
