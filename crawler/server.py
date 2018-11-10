@@ -8,6 +8,7 @@ app.config['JSON_AS_ASCII'] = False
 
 OUTPUT_PATH = './outputs/'
 
+
 @app.route('/')
 def hello():
     return """

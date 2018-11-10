@@ -17,31 +17,35 @@ def test_client():
 
 @pytest.fixture
 def json_result_content():
+    SAA_ROUTE = '/images/stories/documentos/calendarios/graduacao/'
+    SAA_URL = f'http://www.saa.unb.br{SAA_ROUTE}'
+    CAL = 'cal_matricula/'
+    PATH = '/images/stories/documentos/calendarios/graduacao'
     JSON_RESULT_CONTENT = [
         {
             "text": "Calendário de Matrícula 1º/2019",
-            "path": "/images/stories/documentos/calendarios/graduacao/cal_matricula/mat___2019_1.pdf",
-            "url": "http://www.saa.unb.br/images/stories/documentos/calendarios/graduacao/cal_matricula/mat___2019_1.pdf"
+            "path": f'{PATH}{CAL}mat___2019_1.pdf',
+            "url": f'{SAA_URL}{CAL}mat___2019_1.pdf'
         },
         {
             "text": "Calendário de Matrícula 2º/2018",
-            "path": "/images/stories/documentos/calendarios/graduacao/cal_matricula/\tcal_2018_2.pdf",
-            "url": "http://www.saa.unb.br/images/stories/documentos/calendarios/graduacao/cal_matricula/%09cal_2018_2.pdf"
+            "path": f'{PATH}{CAL}\tcal_2018_2.pdf',
+            "url": f'{SAA_URL}{CAL}%09cal_2018_2.pdf'
         },
         {
             "text": "Calendário de Matrícula 1º/2018",
-            "path": "/images/stories/documentos/calendarios/graduacao/cal_matricula/cal_de_matricula_em_disciplina_12018.pdf",
-            "url": "http://www.saa.unb.br/images/stories/documentos/calendarios/graduacao/cal_matricula/cal_de_matricula_em_disciplina_12018.pdf"
+            "path": f'{PATH}{CAL}cal_de_matricula_em_disciplina_12018.pdf',
+            "url": f'{SAA_URL}{CAL}cal_de_matricula_em_disciplina_12018.pdf'
         },
         {
             "text": "Calendário de Matrícula 2º/2017",
-            "path": "/images/stories/documentos/calendarios/graduacao/cal_matricula/cal_matricula_22017.pdf",
-            "url": "http://www.saa.unb.br/images/stories/documentos/calendarios/graduacao/cal_matricula/cal_matricula_22017.pdf"
+            "path": f'{PATH}{CAL}cal_matricula_22017.pdf',
+            "url": f'{SAA_URL}{CAL}cal_matricula_22017.pdf'
         },
         {
             "text": "Calendário de Matrícula 1º/2017",
-            "path": "/images/stories/documentos/calendarios/graduacao/cal_aluno/Cartaz_Calendario_Academico_1_2017.pdf",
-            "url": "http://www.saa.unb.br/images/stories/documentos/calendarios/graduacao/cal_aluno/Cartaz_Calendario_Academico_1_2017.pdf"
+            "path": f'{PATH}cal_aluno/Cartaz_Calendario_Academico_1_2017.pdf',
+            "url": f'{SAA_URL}cal_aluno/Cartaz_Calendario_Academico_1_2017.pdf'
         }
     ]
 
