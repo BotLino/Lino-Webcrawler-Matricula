@@ -10,3 +10,4 @@ pymongo
 freezegun
 mongomock
 pytest
+pytest-cov
