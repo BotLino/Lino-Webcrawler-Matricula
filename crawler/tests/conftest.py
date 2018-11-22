@@ -18,6 +18,28 @@ def test_client():
 def semester_period_result():
     return '2\u00ba/2018'
 
+@pytest.fixture
+def json_corrupted():
+    JSON_CORRUPTED = [
+        {
+            "text": "Calendário de Matrícula 1º/2019"
+        },
+        {
+            "text": "Calendário de Matrícula 2º/2018"
+        },
+        {
+            "text": "Calendário de Matrícula 1º/2018"
+        },
+        {
+            "text": "Calendário de Matrícula 2º/2017"
+        },
+        {
+            "text": "Calendário de Matrícula 1º/2017"
+        }
+    ]
+
+    return JSON_CORRUPTED
+
 
 @pytest.fixture
 def json_result_content():
