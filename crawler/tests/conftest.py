@@ -14,6 +14,10 @@ def test_client():
 
     ctx.pop()
 
+@pytest.fixture
+def semester_period_result():
+    return '2\u00ba/2018'
+
 
 @pytest.fixture
 def json_result_content():
