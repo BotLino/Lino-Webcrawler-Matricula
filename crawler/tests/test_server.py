@@ -15,8 +15,9 @@ class TestServer():
         assert res.status_code == 200
 
     @freeze_time('2018-11-09')
-    def test_get_semester(self, test_client, json_result_content, semester_period_result, tmpdir):
-        res = test_client.get('registration/downloadPdf')
+    def test_get_semester(self, test_client, json_result_content,
+                          semester_period_result, tmpdir):
+        test_client.get('registration/downloadPdf')
 
         pdf = PdfReader()
         period = pdf.getCurrentPeriod()
@@ -24,8 +25,8 @@ class TestServer():
         assert semester_period_result == period
 
     @freeze_time('2018-11-09')
-    def test_corrupted_data(self, test_client,json_corrupted, tmpdir):
-        res = test_client.get('registration/downloadPdf')
+    def test_corrupted_data(self, test_client, json_corrupted, tmpdir):
+        test_client.get('registration/downloadPdf')
 
         with open('result.json') as result_json:
-            assert  result_json != json_corrupted
+            assert result_json != json_corrupted
