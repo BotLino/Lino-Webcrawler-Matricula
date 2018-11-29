@@ -4,7 +4,7 @@ stages:
   - deploy
 
 variables:
-  WEBCRAWLER_LATEST_IMAGE: $DOCKER_USER/webcrawler-matricula:latest
+  WEBCRAWLER_LATEST_IMAGE: $DOCKER_USER/webcrawler-matricula
 
 
 ##############################################################################
@@ -53,6 +53,18 @@ build webcrawler:
     - /master/
   environment: production
 
+build webcrawler-homolog:
+  image: docker:latest
+  stage: build
+  services:
+    - docker:dind
+  script:
+    - docker build -t $WEBCRAWLER_LATEST_IMAGE:homolog .
+    - docker login -u $DOCKER_USER -p $DOCKER_PASS
+    - docker push $WEBCRAWLER_LATEST_IMAGE:homolog
+  only:
+    - /devel/
+
 
 ##############################################################################
 #                                 Deploy stage                               #
@@ -71,3 +83,17 @@ deploy_production:
             --rancher-url $RANCHER_URL"
   only:
     - /master/
+
+deploy_homolog:
+  image: cdrx/rancher-gitlab-deploy
+  stage: deploy
+  script:
+        - "upgrade
+            --rancher-url $RANCHER_HOMOLOG_URL
+            --rancher-key $RANCHER_HOMOLOG_ACCESS_KEY
+            --rancher-secret $RANCHER_HOMOLOG_SECRET_KEY
+            --environment $RANCHER_ENVIRONMENT
+            --stack $RANCHER_STACK
+            --service webcrawler-matricula"
+  only:
+    - /devel/
