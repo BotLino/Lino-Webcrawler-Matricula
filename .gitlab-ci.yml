@@ -34,6 +34,8 @@ unit test:
     - cd crawler
   script:
     - pytest
+  only:
+    - /master/
 
 
 ##############################################################################
@@ -51,6 +53,7 @@ build webcrawler:
     - docker push $WEBCRAWLER_LATEST_IMAGE
   only:
     - /master/
+    - /ciHomolog/
   environment: production
 
 build webcrawler-homolog:
@@ -83,6 +86,7 @@ deploy_production:
             --rancher-url $RANCHER_URL"
   only:
     - /master/
+    - /ciHomolog/
 
 deploy_homolog:
   image: cdrx/rancher-gitlab-deploy
