@@ -14,6 +14,6 @@ RUN pip install -r requirements.txt
 
 WORKDIR /Lino-Webcrawler-Matricula/crawler
 
-EXPOSE 5000
+EXPOSE 5012
 
 CMD python server.py

@@ -34,6 +34,8 @@ unit test:
     - cd crawler
   script:
     - pytest
+  only:
+    - /master/
 
 
 ##############################################################################
@@ -51,6 +53,7 @@ build webcrawler:
     - docker push $WEBCRAWLER_LATEST_IMAGE
   only:
     - /master/
+    - /deployImage/
   environment: production
 
 build webcrawler-homolog:
