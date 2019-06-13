@@ -33,29 +33,30 @@ class PdfReader():
 
     def getCurrentPeriod(self):
         # gets current date and split year and month to get current period
-        ts = time.time()
-        st = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m')
-        st = st.split('-')
-        year = st[0]
-        month = int(st[1])
+        current_time_seconds = time.time()
+        year_month = datetime.datetime.fromtimestamp(current_time_seconds).strftime('%Y-%m')
+        year_month = year_month.split('-')
+        year = year_month[0]
+        month = int(year_month[1])
         if month >= 1 and month <= 6:
             semester = 1
         else:
             semester = 2
 
-        period = str(semester) + '\u00ba/' + str(year)
+        marculine_ordinal_indicator = '\u00ba/' # symbol º
+        period = str(semester) + masculine_ordinal_separator + str(year)
         return period
 
-    def convertsPdfToImage(self, fileName):
+    def convertsPdfToImage(self, file_name):
         if not(os.path.isfile(f'{OUTPUT_PATH}{pdfFileName}.png')):
-            pdf = convert_from_path(f'{DOWNLOAD_PATH}{fileName}.pdf',  300)
+            pdf = convert_from_path(f'{DOWNLOAD_PATH}{file_name}.pdf',  300)
             for page in pdf:
-                page.save(f'{OUTPUT_PATH}{fileName}.png', 'PNG')
+                page.save(f'{OUTPUT_PATH}{file_name}.png', 'PNG')
 
     def fixURL(url):
-        if "%09" in url:
-            url = url.replace("%09", "")
-
+        tab_url_encoded = '%09'
+        if tab_url_encoded in url:
+            url = url.replace(tab_url_encoded, '')
         return url
 
     def downloadRegistration(self):
@@ -70,15 +71,15 @@ class PdfReader():
                 # fix url bug '%09'
                 url = PdfReader.fixURL(item['url'])
                 # sets filename
-                fileName = url.split('/')
-                fileName = fileName.pop()
-                fileName = fileName.replace('.pdf', '')
+                file_name = url.split('/')
+                file_name = file_name.pop()
+                file_name = file_name.replace('.pdf', '')
                 # download pdf
-                if not(os.path.isfile(f'{DOWNLOAD_PATH}{fileName}.pdf')):
+                if not(os.path.isfile(f'{DOWNLOAD_PATH}{file_name}.pdf')):
                     pdf = pdfx.PDFx(url)
                     pdf.download_pdfs(DOWNLOAD_PATH)
 
-                return fileName
+                return file_name
 
 
 if __name__ == '__main__':
