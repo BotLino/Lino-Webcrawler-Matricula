@@ -34,7 +34,8 @@ class PdfReader():
     def getCurrentPeriod(self):
         # gets current date and split year and month to get current period
         current_time_seconds = time.time()
-        year_month = datetime.datetime.fromtimestamp(current_time_seconds).strftime('%Y-%m')
+        year_month = datetime.datetime.fromtimestamp(
+            current_time_seconds).strftime('%Y-%m')
         year_month = year_month.split('-')
         year = year_month[0]
         month = int(year_month[1])
@@ -43,7 +44,7 @@ class PdfReader():
         else:
             semester = 2
 
-        marculine_ordinal_indicator = '\u00ba/' # symbol º
+        marculine_ordinal_indicator = '\u00ba/'  # symbol º
         period = str(semester) + masculine_ordinal_separator + str(year)
         return period
 
