@@ -1,4 +1,7 @@
 # Lino-Webcrawler-Matricula
+
+<a href="https://codeclimate.com/github/BotLino/Lino-Webcrawler-Matricula/maintainability"><img src="https://api.codeclimate.com/v1/badges/f3c9ae75b6bd68347e5a/maintainability" /></a>
+
 ## Objetivo
 Microsserviço responsável por obter os dados de período de matrícula e envia-los ao usuário de forma gráfica a partir de uma imagem.
 ## Como usar
