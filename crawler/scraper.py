@@ -44,7 +44,7 @@ class PdfReader():
         else:
             semester = 2
 
-        marculine_ordinal_indicator = '\u00ba/'  # symbol º
+        masculine_ordinal_indicator = '\u00ba/'  # symbol º
         period = str(semester) + masculine_ordinal_separator + str(year)
         return period
 
