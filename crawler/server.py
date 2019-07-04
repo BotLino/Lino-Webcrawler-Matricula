@@ -20,10 +20,10 @@ def hello():
 def downloadPdf():
     subprocess.check_output(['python', 'scraper.py'])
     pdf = PdfReader()
-    fileName = pdf.downloadRegistration()
-    imageName = f'{OUTPUT_PATH}{fileName}.png'
-    if(os.path.isfile(imageName)):
-        return send_file(imageName)
+    file_name = pdf.downloadRegistration()
+    image_name = f'{OUTPUT_PATH}{file_name}.png'
+    if(os.path.isfile(image_name)):
+        return send_file(image_name)
     else:
         return jsonify({
             'status': 'error',
